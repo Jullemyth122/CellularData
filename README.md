@@ -42,11 +42,6 @@ An immersive 3D visualization of cellular data networks built with React Three F
 4.  **Open in Browser:**
     Navigate to `http://localhost:5173` (or the port shown in your terminal) to view the visualization.
 
-## 🎮 Controls
-
-- **Orbit**: Click and drag to rotate the view around the central data node.
-- **Zoom**: Scroll to zoom in and out.
-- **Pan**: Right-click and drag to pan the camera.
 
 ## 📱 Mobile Optimized
 
