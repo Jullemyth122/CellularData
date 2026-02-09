@@ -4,18 +4,6 @@ import { PerspectiveCamera, Text } from '@react-three/drei'
 import * as THREE from 'three'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 
-// Utility: Detect device performance level
-const getDeviceQuality = () => {
-  // Check for mobile devices
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-
-  // Check for low-end devices (rough estimate based on hardware concurrency)
-  const isLowEnd = navigator.hardwareConcurrency <= 4
-
-  if (isMobile || isLowEnd) return 'low'
-  if (navigator.hardwareConcurrency >= 8) return 'high'
-  return 'medium'
-}
 
 
 // Generate random text/numbers
@@ -385,35 +373,13 @@ const Scene = ({ bloomLightsRef }) => {
     }
   })
 
-  // Detect device quality for adaptive settings
-  const quality = useMemo(() => getDeviceQuality(), [])
-
-  // Quality-based settings
-  const qualitySettings = useMemo(() => {
-    switch (quality) {
-      case 'low':
-        return {
-          numRings: 12,          // Reduce rings on mobile (18 → 12)
-          ringSegments: 24,       // Lower polygon count (32 → 24)
-          lineMultiplier: 0.6,    // 40% fewer lines
-          textMultiplier: 0.5     // Half the text labels
-        }
-      case 'medium':
-        return {
-          numRings: 25,
-          ringSegments: 60,
-          lineMultiplier: 0.8,
-          textMultiplier: 0.75
-        }
-      default: // 'high'
-        return {
-          numRings: 32,
-          ringSegments: 128,
-          lineMultiplier: 1.0,
-          textMultiplier: 1.0
-        }
-    }
-  }, [quality])
+  // Fixed quality settings (medium)
+  const qualitySettings = useMemo(() => ({
+    numRings: 25,
+    ringSegments: 60,
+    lineMultiplier: 0.8,
+    textMultiplier: 0.75
+  }), [])
 
   // Create shared materials for better performance
   const sharedMaterials = useMemo(() => ({
@@ -612,35 +578,13 @@ const Scene = ({ bloomLightsRef }) => {
 const Symphony = () => {
   const bloomLightsRef = useRef()
 
-  // Detect device quality for adaptive bloom settings
-  const quality = useMemo(() => getDeviceQuality(), [])
-
-  // Adaptive bloom settings based on device quality
-  const bloomSettings = useMemo(() => {
-    switch (quality) {
-      case 'low':
-        return {
-          intensity: 1.2,          // Reduced intensity (2.0 → 1.2)
-          radius: 0.3,             // Smaller radius (0.4 → 0.3)
-          luminanceThreshold: 0.7, // Higher threshold (0.6 → 0.7)
-          luminanceSmoothing: 0.1  // More smoothing for performance
-        }
-      case 'medium':
-        return {
-          intensity: 1.6,
-          radius: 0.35,
-          luminanceThreshold: 0.65,
-          luminanceSmoothing: 0.075
-        }
-      default: // 'high'
-        return {
-          intensity: 2.0,
-          radius: 0.4,
-          luminanceThreshold: 0.6,
-          luminanceSmoothing: 0.05
-        }
-    }
-  }, [quality])
+  // Fixed bloom settings (medium quality)
+  const bloomSettings = useMemo(() => ({
+    intensity: 1.6,
+    radius: 0.35,
+    luminanceThreshold: 0.65,
+    luminanceSmoothing: 0.075
+  }), [])
 
 
   return (
